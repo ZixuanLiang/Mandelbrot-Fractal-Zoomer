@@ -25,29 +25,34 @@ int P3colorpalette(char *colorfile, int width, int heightpercolor, char *outputf
 		return 1;
 	}
 
-	int *colorCount;
+	int *colorCount = (int*) malloc(sizeof(int));
 	uint8_t **colorMap = FileToColorMap(colorfile, colorCount);
-	if (colorMap == null)
+	if (colorMap == NULL)
 	{
 		free(colorMap);
 		return 1;
 	}
 
-	FILE *outputfile = fopen(outputfile, "w");
-	fprintf(outputfile, "P3 %d %d 255\n", width, (*colorCount) * heightpercolor);
-	for (int i = 0; i < colorCount; i++)
+	FILE *output = fopen(outputfile, "w");
+	fprintf(output, "P3 %d %d 255\n", width, (*colorCount) * heightpercolor);
+	for (int i = 0; i < *colorCount; i++)
 	{
 		uint8_t *color = *(colorMap + i);
 		for (int j = 0; j < heightpercolor; j++)
 		{
 			for (int k = 0; k < width; k++)
 			{
-				fprintf(outputfile, "%hhu %hhu %hhu", *color, *(color + 1), *(color + 2));
+				fprintf(output, "%hhu %hhu %hhu", *color, *(color + 1), *(color + 2));
 			}
-			fprintf(outputfile, "\n");
+			fprintf(output, "\n");
 		}
 	}
-
+	for (int j = 0; j < *colorCount; j++)
+	{
+		free(*(colorMap + j));
+	}
+	free(colorMap);
+	free(colorCount);
 	return 0;
 }
 
@@ -60,27 +65,33 @@ int P6colorpalette(char *colorfile, int width, int heightpercolor, char *outputf
 		return 1;
 	}
 
-	int *colorCount;
+	int *colorCount = (int*) malloc(sizeof(int));
 	uint8_t **colorMap = FileToColorMap(colorfile, colorCount);
-	if (colorMap == null)
+	if (colorMap == NULL)
 	{
 		free(colorMap);
 		return 1;
 	}
 
-	FILE *outputfile = fopen(outputfile, "w");
-	fprintf(outputfile, "P6 %d %d 255\n", width, (*colorCount) * heightpercolor);
-	for (int i = 0; i < colorCount; i++)
+	FILE *output = fopen(outputfile, "w");
+	fprintf(output, "P6 %d %d 255\n", width, (*colorCount) * heightpercolor);
+	for (int i = 0; i < *colorCount; i++)
 	{
 		uint8_t *color = *(colorMap + i);
 		for (int j = 0; j < heightpercolor; j++)
 		{
 			for (int k = 0; k < width; k++)
 			{
-				fwrite(color, 1, 3, outputfile);
+				fwrite(color, 1, 3, output);
 			}
 		}
 	}
+	for (int j = 0; j < *colorCount; j++)
+	{
+		free(*(colorMap + j));
+	}
+	free(colorMap);
+	free(colorCount);
 	return 0;
 }
 

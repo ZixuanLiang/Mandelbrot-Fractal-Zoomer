@@ -17,14 +17,14 @@
 uint8_t **FileToColorMap(char *colorfile, int *colorcount)
 {
 	// YOUR CODE HERE
-	FILE *file = fopen(colorfile, "r");  
+	FILE* file = fopen(colorfile, "r");  
 	fscanf(file, "%d", colorcount);
 	// address of the first element of the array of pointers 
-	uint8_t **colorMap = (uint8_t **)malloc(colorcount * sizeof(*uint8_t));
+	uint8_t **colorMap = (uint8_t **)malloc(*colorcount * sizeof(uint8_t*));
 	int i;
 	for (i = 0; i < *colorcount; i++)
 	{
-		*(colorMap + i) = (*uint8_t)malloc(sizeof(uint8_t) * 3);
+		*(colorMap + i) = (uint8_t*)malloc(sizeof(uint8_t) * 3);
 		fscanf(file, "%hhu %hhu %hhu", *(colorMap + i), *(colorMap + i) + 1, *(colorMap + i) + 2);
 	}
 	fclose(file);

@@ -21,7 +21,7 @@ ComplexNumber* newComplexNumber(double real_component, double imaginary_componen
 {
     //YOUR CODE HERE
 	ComplexNumber *p = (ComplexNumber *) malloc(sizeof(ComplexNumber));
-	p->real = real;
+	p->real = real_component;
 	p->imaginary = imaginary_component;
 	return p;
 }

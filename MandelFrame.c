@@ -10,6 +10,7 @@
 #include "ComplexNumber.h"
 #include "Mandelbrot.h"
 #include <sys/types.h>
+#include <string.h>
 
 void printUsage(char* argv[])
 {

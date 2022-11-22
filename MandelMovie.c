@@ -13,6 +13,7 @@
 #include "Mandelbrot.h"
 #include "ColorMapInput.h"
 #include <sys/types.h>
+#include <string.h>
 
 void printUsage(char *argv[])
 {
@@ -29,6 +30,7 @@ As another example, if initialscale=10, finalscale=0.01, framecount=5, then your
 void MandelMovie(double threshold, u_int64_t max_iterations, ComplexNumber *center, double initialscale, double finalscale, int framecount, u_int64_t resolution, u_int64_t **output)
 {
 	// YOUR CODE HERE
+	double scale;
 	for (int i = 0; i < framecount; i++)
 	{
 		scale = initialscale * pow(pow(finalscale / initialscale, 1.0 / (framecount - 1)), i);
@@ -80,7 +82,7 @@ int main(int argc, char *argv[])
 	MandelMovie requires an output array, so make sure you allocate the proper amount of space.
 	If allocation fails, free all the space you have already allocated (including colormap), then return with exit code 1.
 	*/
-	ComplexNumber *center = newCompexNumber(center_real, center_imaginery);
+	ComplexNumber *center = newComplexNumber(center_real, center_imaginery);
 	// allocate the array of pointers
 	u_int64_t **frames = (u_int64_t **)malloc(sizeof(u_int64_t *) * framecount);
 	if (frames == NULL)
@@ -88,7 +90,7 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 	// allocate an array of n*n length, which is pointed by a pointer in the above array of pointers
-	int n = resolution * 2 + 1;
+	u_int64_t n = resolution * 2 + 1;
 	for (int i = 0; i < framecount; i++)
 	{
 		*(frames + i) = (u_int64_t *)malloc(sizeof(u_int64_t) * n * n);
@@ -97,7 +99,7 @@ int main(int argc, char *argv[])
 			return 1;
 		}
 	}
-	MandelMovie(threshold, max_iteration, center, initialscale, finalscale, framecount, resolution, frames);
+	MandelMovie(threshold, max_iterations, center, initialscale, finalscale, framecount, resolution, frames);
 
 	// YOUR CODE HERE
 
@@ -116,18 +118,18 @@ int main(int argc, char *argv[])
 	}
 	FILE *outputfile;
 	int filenamelength = strlen(outpoutfolder) + strlen("/frame00000.ppm") + 1;
-	char filename[filenamelength];
+	char buffer[filenamelength];
 	uint8_t black[3] = {0, 0, 0};
 	for (int i = 0; i < framecount; i++)
 	{
 		u_int64_t *mandelbrotplot = *(frames + i);
-		sprintf(filename, "%s/frame%05d.ppm", outpoutfolder, i);
-		outputfile = fopen(filename, "w+");
+		sprintf(buffer, "%s/frame%05d.ppm", outpoutfolder, i);
+		outputfile = fopen(buffer, "w+");
 		if (outputfile == NULL)
 		{
 			return 1;
 		}
-		fprintf(outputfile, "P6 %llu %llu 255\n", n, n);
+		fprintf(outputfile, "P6 %lu %lu 255\n", n, n);
 		int colorindex;
 		for (int j = 0; j < n; j++)
 			for (int k = 0; k < n; k++)
